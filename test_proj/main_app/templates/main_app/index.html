@@ -1,12 +1,40 @@
 {% extends 'main_app/base.html' %}
 
+<style>
+    th {
+        margin-right: 10px;
+    }
+</style>
+
 
 {% block content%}
 
 <div class="container mt-5">
-    {% for obj in data %}
-        <p>{{ obj }}</p>
-    {% endfor %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>имя диска</th>
+                <th>размер</th>
+                <th>mountpoint</th>
+                <th>кнопки</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for obj in data %}
+                <tr>
+                    <td>{{ obj.name }}</td>
+                    <td>{{ obj.size }}</td>
+                    <td>{{ obj.mountpoint }}</td>
+                    <td class="col-4">
+                        <button class="btn btn-warning">unmount</button>
+                        <button class="btn btn-danger">formate</button>
+                        <button class="btn btn-success">mount</button>
+                    </td>
+                </tr>
+            {% endfor %}    
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}
