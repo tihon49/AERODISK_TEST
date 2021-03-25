@@ -1,11 +1,5 @@
 {% extends 'main_app/base.html' %}
 
-<style>
-    th {
-        margin-right: 10px;
-    }
-</style>
-
 
 {% block content%}
 
@@ -27,9 +21,20 @@
                     <td>{{ obj.size }}</td>
                     <td>{{ obj.mountpoint }}</td>
                     <td class="col-4">
-                        <button class="btn btn-warning">unmount</button>
-                        <button class="btn btn-danger">formate</button>
-                        <button class="btn btn-success">mount</button>
+                        <button class="btn btn-warning" 
+                                onclick="location.href='{% url 'unmount' disk_name=obj.name %}'">
+                            unmount
+                        </button>
+
+                        <button class="btn btn-danger"
+                                onclick="location.href='{% url 'formate' disk_name=obj.name %}'">
+                            formate
+                        </button>
+
+                        <button class="btn btn-success" 
+                                onclick="location.href='{% url 'mount' disk_name=obj.name %}'">
+                            mount
+                        </button>
                     </td>
                 </tr>
             {% endfor %}    

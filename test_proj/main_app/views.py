@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 
 import subprocess
@@ -34,14 +34,15 @@ def get_disk_data(some_data: str) -> dict:
     return False
 
 
+
 class BaseView(View):
     """отображение всех дисков"""
 
     def get(self, request):
         template = 'main_app/index.html'
         context = {'data': []}
-        data = subprocess.Popen('lsblk', stdout = subprocess.PIPE, shell = True)
-        result = data.communicate()[0].decode('cp866')
+        command = subprocess.Popen('lsblk', stdout = subprocess.PIPE, shell = True)
+        result = command.communicate()[0].decode('cp866')
 
         for line in result.split('\n')[1:]:
             result = get_disk_data(line)
@@ -50,3 +51,41 @@ class BaseView(View):
                 context['data'].append(result)
         
         return render(request, template, context)
+
+
+
+class MountView(View):
+    """монтирование диска"""
+
+    def get(self, request, disk_name):
+        command = subprocess.Popen(f'sudo mount /dev/{disk_name} /mnt/', stdout = subprocess.PIPE, shell = True)
+        result = command.communicate()[0].decode('cp866')
+        print(result)
+
+
+        return redirect('base')
+
+
+
+class UnmountView(View):
+    """монтирование диска"""
+    
+    def get(self, request, disk_name):
+        command = subprocess.Popen(f'sudo umount -l /mnt', stdout = subprocess.PIPE, shell = True)
+        result = command.communicate()[0].decode('cp866')
+        print(result)
+
+        return redirect('base')
+
+
+
+class FormateDiskView(View):
+    """фоматирование диска"""
+
+    def get(self, request, disk_name):
+        command = subprocess.Popen(f'sudo mkfs -t ext4 /dev/{disk_name}', stdout = subprocess.PIPE, shell = True)
+        result = command.communicate()[0].decode('cp866')
+        print(result)
+
+        return redirect('base')
+
