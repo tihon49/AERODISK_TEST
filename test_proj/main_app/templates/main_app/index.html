@@ -4,6 +4,17 @@
 {% block content%}
 
 <div class="container mt-5">
+    <div class="row mb-5">
+        <div class="col-2 offset-8">
+            <strong>  Привет, {{ user.username }} </strong>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-danger"
+                    onclick="location.href='{% url 'logout' %}'">
+                Выйти
+            </button>
+        </div>
+    </div>
     <table class="table">
         <thead>
             <tr>

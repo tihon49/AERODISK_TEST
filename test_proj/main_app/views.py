@@ -5,7 +5,6 @@ import subprocess
 import re
 
 
-
 def get_disk_data(some_data: str) -> dict:
     """принимает строку, ищет в ней:
             1. Имя диска
@@ -15,7 +14,7 @@ def get_disk_data(some_data: str) -> dict:
         возвращает словарь с данными о диске либо False
     """
 
-    #находим нужные данные с помощью регулярных выражений
+    # находим нужные данные с помощью регулярных выражений
     disk_name_lookFor = 'sd[a-z]\d?'
     disk_space_lookFor = '\d{1,4},?\d?[A-Z]'
 
@@ -27,12 +26,11 @@ def get_disk_data(some_data: str) -> dict:
         data_to_return = ({'name': disk_name[0],
                            'size': disk_space[0],
                            'mountpoint': mountpoint
-                            })
+                           })
 
         return data_to_return
 
     return False
-
 
 
 class BaseView(View):
@@ -41,7 +39,7 @@ class BaseView(View):
     def get(self, request):
         template = 'main_app/index.html'
         context = {'data': []}
-        command = subprocess.Popen('lsblk', stdout = subprocess.PIPE, shell = True)
+        command = subprocess.Popen('lsblk', stdout=subprocess.PIPE, shell=True)
         result = command.communicate()[0].decode('cp866')
 
         for line in result.split('\n')[1:]:
@@ -49,43 +47,38 @@ class BaseView(View):
 
             if result:
                 context['data'].append(result)
-        
-        return render(request, template, context)
 
+        return render(request, template, context)
 
 
 class MountView(View):
     """монтирование диска"""
 
     def get(self, request, disk_name):
-        command = subprocess.Popen(f'sudo mount /dev/{disk_name} /mnt/', stdout = subprocess.PIPE, shell = True)
+        command = subprocess.Popen(f'sudo mount /dev/{disk_name} /mnt/', stdout=subprocess.PIPE, shell=True)
         result = command.communicate()[0].decode('cp866')
         print(result)
 
-
         return redirect('base')
-
 
 
 class UnmountView(View):
-    """монтирование диска"""
-    
+    """размонтирование диска"""
+
     def get(self, request, disk_name):
-        command = subprocess.Popen(f'sudo umount -l /mnt', stdout = subprocess.PIPE, shell = True)
+        command = subprocess.Popen(f'sudo umount -l /mnt', stdout=subprocess.PIPE, shell=True)
         result = command.communicate()[0].decode('cp866')
         print(result)
 
         return redirect('base')
-
 
 
 class FormateDiskView(View):
     """фоматирование диска"""
 
     def get(self, request, disk_name):
-        command = subprocess.Popen(f'sudo mkfs -t ext4 /dev/{disk_name}', stdout = subprocess.PIPE, shell = True)
+        command = subprocess.Popen(f'sudo mkfs -t ext4 /dev/{disk_name}', stdout=subprocess.PIPE, shell=True)
         result = command.communicate()[0].decode('cp866')
         print(result)
 
         return redirect('base')
-
