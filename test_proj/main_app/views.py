@@ -55,9 +55,10 @@ class MountView(View):
     """монтирование диска"""
 
     def get(self, request, disk_name):
-        command = subprocess.Popen(f'sudo mount /dev/{disk_name} /mnt/', stdout=subprocess.PIPE, shell=True)
-        result = command.communicate()[0].decode('cp866')
-        print(result)
+        if request.user.is_authenticated:
+            command = subprocess.Popen(f'sudo mount /dev/{disk_name} /mnt/', stdout=subprocess.PIPE, shell=True)
+            result = command.communicate()[0].decode('cp866')
+            print(result)
 
         return redirect('base')
 
@@ -66,9 +67,10 @@ class UnmountView(View):
     """размонтирование диска"""
 
     def get(self, request, disk_name):
-        command = subprocess.Popen(f'sudo umount -l /mnt', stdout=subprocess.PIPE, shell=True)
-        result = command.communicate()[0].decode('cp866')
-        print(result)
+        if request.user.is_authenticated:
+            command = subprocess.Popen(f'sudo umount -l /mnt', stdout=subprocess.PIPE, shell=True)
+            result = command.communicate()[0].decode('cp866')
+            print(result)
 
         return redirect('base')
 
@@ -77,8 +79,9 @@ class FormateDiskView(View):
     """фоматирование диска"""
 
     def get(self, request, disk_name):
-        command = subprocess.Popen(f'sudo mkfs -t ext4 /dev/{disk_name}', stdout=subprocess.PIPE, shell=True)
-        result = command.communicate()[0].decode('cp866')
-        print(result)
+        if request.user.is_authenticated:
+            command = subprocess.Popen(f'sudo mkfs -t ext4 /dev/{disk_name}', stdout=subprocess.PIPE, shell=True)
+            result = command.communicate()[0].decode('cp866')
+            print(result)
 
         return redirect('base')
