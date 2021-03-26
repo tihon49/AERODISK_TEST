@@ -74,7 +74,9 @@ class UnmountView(View):
             result = command.communicate()[0].decode('cp866')
             print(result)
 
-        return redirect('base')
+            return redirect('base')
+
+        return render(self.request, 'account/not_auth.html')
 
 
 class FormateDiskView(View):
@@ -86,4 +88,6 @@ class FormateDiskView(View):
             result = command.communicate()[0].decode('cp866')
             print(result)
 
-        return redirect('base')
+            return redirect('base')
+
+        return render(self.request, 'account/not_auth.html')
