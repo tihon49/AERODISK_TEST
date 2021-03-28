@@ -20,6 +20,18 @@ def registration_view(request):
             messages.success(request, 'Создан аккаунт пользователя ' + user)
 
             return redirect('login')
+        else:
+            for error in form.errors:
+                print(error, ':', form.errors[error])
+                if 'A user with that username already exists.' in form.errors[error].as_text():
+                    messages.success(request, 'Это имя уже занято')
+                    break
+                elif 'This password is too common.' in form.errors[error].as_text():
+                    messages.success(request, 'Слишком простой пароль. Пароль должен состоять из букв, цифр и быть не короче 8-ми символов')
+                    break
+                elif 'The two password fields didn' in form.errors[error].as_text():
+                    messages.success(request, 'Пароли не совпадают')
+                
 
     context = {'form': form}
     return render(request, template, context)
